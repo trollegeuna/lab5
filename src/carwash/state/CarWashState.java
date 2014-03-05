@@ -1,10 +1,13 @@
 package carwash.state;
 
+
+import carwars.events.SimulationStarts;
+import lab5.simulator.EventQueue;
 import lab5.simulator.SimState;
 
 public class CarWashState extends SimState {
-	final private int totalFastWashers = 2;
-	final private int totalSlowWashers = 2;
+	final public int totalFastWashers = 2;
+	final public int totalSlowWashers = 2;
 	public int availableFastWashers;
 	public int availableSlowWashers;
 	public int currentTime = super.currentTime;
@@ -22,7 +25,13 @@ public class CarWashState extends SimState {
 	private double totalIdleTime;
 
 	public FIFO carQueue;
-	CarFactory carFactory = new CarFactory();
+	public CarFactory carFactory = new CarFactory();
+	public EventQueue eventQueue;
+	
+	public CarWashState(EventQueue eventQueue) {
+		this.eventQueue = eventQueue;
+		eventQueue.add(new SimulationStarts(this, eventQueue));
+	}
 
 	public boolean isFull() {
 		if (availableFastWashers == 0 && availableSlowWashers == 0) {

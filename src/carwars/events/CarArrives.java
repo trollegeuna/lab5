@@ -1,5 +1,6 @@
 package carwars.events;
 
+import carwash.state.Car;
 import carwash.state.CarWashState;
 import lab5.simulator.Event;
 import lab5.simulator.EventQueue;
@@ -33,14 +34,14 @@ public class CarArrives extends Event {
 
 		state.carQueue.add(state.carFactory.makeCar());
 
-		if (state.currentFastWashers != 0) {
-			state.currentFastWashers = state.currentFastWashers - 1;
+		if (state.availableFastWashers != 0) {
+			state.availableFastWashers = state.availableFastWashers - 1;
 			Car car = state.carQueue.first();
 			state.carQueue.removeFirst();
 //			double timeToWash = state.fastURF.next();
 
-		} else if (state.currentSlowWashers != 0) {
-			state.currentSlowWashers = state.currentSlowWashers - 1;
+		} else if (state.availableSlowWashers != 0) {
+			state.availableSlowWashers = state.availableSlowWashers - 1;
 			Car car = state.carQueue.first();
 			state.carQueue.removeFirst();
 		}
