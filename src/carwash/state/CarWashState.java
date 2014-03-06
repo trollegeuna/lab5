@@ -21,8 +21,9 @@ public class CarWashState extends SimState {
 	private double[] fastDist = new double[] { 2.8, 4.6 };
 	private double[] slowDist = new double[] { 3.5, 6.7 };
 	private double lambda = 2;
-	private double totalQueueTime;
-	private double totalIdleTime;
+	public double totalQueueTime;
+	public double totalIdleTime;
+	public int totalRejected;
 
 	public FIFO carQueue;
 	public CarFactory carFactory = new CarFactory();

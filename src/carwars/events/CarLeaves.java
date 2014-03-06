@@ -1,5 +1,6 @@
 package carwars.events;
 
+import carwash.state.Car;
 import carwash.state.CarWashState;
 import lab5.simulator.Event;
 import lab5.simulator.EventQueue;
@@ -15,14 +16,33 @@ import lab5.simulator.EventQueue;
 
 public class CarLeaves extends Event {
 
-	public CarLeaves(CarWashState state, EventQueue queue) {
+	Car car;
+	boolean fastWasher = false;
+
+	public CarLeaves(CarWashState state, EventQueue queue, Car car,
+			boolean fastWasher) {
 		super(state, queue);
-		// TODO Auto-generated constructor stub
+		name = "Leave";
+		this.car = car;
+		this.fastWasher = fastWasher;
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+
+		// Make a report
+		String reportLine = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", state.currentTime,
+				state.availableFastWashers, state.availableSlowWashers, car.id,
+				name, state.totalIdleTime, state.totalQueueTime,
+				state.carQueue.size(), state.totalRejected);
+
+		if (fastWasher) {
+			state.availableFastWashers = state.availableFastWashers + 1;
+		} else {
+			state.availableSlowWashers = state.availableSlowWashers + 1;
+		}
+
+		eventQueue.add(new CarArrives(state, eventQueue));
 
 	}
 

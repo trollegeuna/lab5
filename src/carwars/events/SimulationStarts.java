@@ -16,9 +16,9 @@ public class SimulationStarts extends Event {
 
 	@Override
 	public void execute() {
-		Event firstArrival = new CarArrives(state, queue);
+		Event firstArrival = new CarArrives(state, eventQueue);
 		firstArrival.startTime = 0;
-		queue.add(firstArrival);
+		eventQueue.add(firstArrival);
 	}
 
 }
