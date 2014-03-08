@@ -7,18 +7,24 @@ import carwash.state.CarWashState;
 /**
  * When main loop encounters this in the event queue the simulation is stopped.
  */
-public class SimulationStops extends Event{
+public class SimulationStops extends Event {
 
 	public SimulationStops(CarWashState state, EventQueue queue) {
 		super(state, queue);
-		// TODO Auto-generated constructor stub
+		this.name = "Stop";
 	}
 
 	@Override
 	public void execute() {
-		// TODO Auto-generated method stub
+		String reportLine = String.format(
+				"%.2f\t%s\t%s\t-\t%s\t%s\t\t%.2f\t\t%s\t\t%s",
+				state.currentTime, state.availableFastWashers,
+				state.availableSlowWashers, name, state.totalIdleTime,
+				state.totalQueueTime, state.carQueue.size(),
+				state.totalRejected);
+		System.out.println(reportLine);
 		super.eventQueue.clear();
-		
+
 	}
 
 }

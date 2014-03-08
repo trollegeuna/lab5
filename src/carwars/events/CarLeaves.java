@@ -32,7 +32,8 @@ public class CarLeaves extends Event {
 
 		state.currentTime = startTime;
 		// Make a report
-		String reportLine = String.format("%.2f\t%s\t%s\t%s\t%s\t%s\t\t%s\t\t%s\t\t%s",
+		String reportLine = String.format(
+				"%.2f\t%s\t%s\t%s\t%s\t%s\t\t%.2f\t\t%s\t\t%s",
 				state.currentTime, state.availableFastWashers,
 				state.availableSlowWashers, car.id, name, state.totalIdleTime,
 				state.totalQueueTime, state.carQueue.size(),

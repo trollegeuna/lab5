@@ -37,9 +37,11 @@ public class CarArrives extends Event {
 		state.carQueue.add(newCar);
 
 		// Make a report
-		String reportLine = String.format("%.2f\t%s\t%s\t%s\t%s\t%s\t\t%s\t\t%s\t\t%s", state.currentTime,
-				state.availableFastWashers, state.availableSlowWashers,
-				newCar.id, name, state.totalIdleTime, state.totalQueueTime,
+		String reportLine = String.format(
+				"%.2f\t%s\t%s\t%s\t%s\t%s\t\t%.2f\t\t%s\t\t%s",
+				state.currentTime, state.availableFastWashers,
+				state.availableSlowWashers, newCar.id, name,
+				state.totalIdleTime, state.totalQueueTime,
 				state.carQueue.size(), state.totalRejected);
 		System.out.println(reportLine);
 
@@ -74,6 +76,11 @@ public class CarArrives extends Event {
 			state.totalQueueTime = state.totalQueueTime
 					+ (state.currentTime - firstCar.arrivalTime);
 		}
+
+		// should be in CarArrives...
+		CarArrives arrivalEvent = new CarArrives(state, eventQueue);
+		arrivalEvent.startTime = state.currentTime + state.eRS.next();
+		eventQueue.add(arrivalEvent);
 
 	}
 
