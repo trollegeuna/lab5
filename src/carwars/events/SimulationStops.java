@@ -17,6 +17,7 @@ public class SimulationStops extends Event{
 	@Override
 	public void execute() {
 		// TODO Auto-generated method stub
+		super.eventQueue.clear();
 		
 	}
 
