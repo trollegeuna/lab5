@@ -31,16 +31,17 @@ public class CarArrives extends Event {
 			eventQueue.add(new SimulationStops(state, eventQueue));
 			return;
 		}
+		state.currentTime = startTime;
 		// Add a new car
 		Car newCar = state.carFactory.makeCar();
-		newCar.arrivalTime = state.currentTime;
 		state.carQueue.add(newCar);
 
 		// Make a report
-		String reportLine = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", state.currentTime,
+		String reportLine = String.format("%.2f\t%s\t%s\t%s\t%s\t%s\t\t%s\t\t%s\t\t%s", state.currentTime,
 				state.availableFastWashers, state.availableSlowWashers,
 				newCar.id, name, state.totalIdleTime, state.totalQueueTime,
 				state.carQueue.size(), state.totalRejected);
+		System.out.println(reportLine);
 
 		if (state.availableFastWashers != 0 || state.availableSlowWashers != 0) {
 			// Washer available, schedule time for leave event of first car in
