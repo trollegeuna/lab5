@@ -2,9 +2,9 @@ package carwash.state;
 
 public class Car {
 	public int id;
-	public int arrivalTime;
+	public double arrivalTime;
 
-	private Car(int id, int arrivalTime) {
+	public Car(int id, double arrivalTime) {
 		this.id = id;
 		this.arrivalTime = arrivalTime;
 	}
