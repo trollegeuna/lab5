@@ -10,15 +10,15 @@ public class Simulator {
 
 	// The first event (SimulationStarts) will be created in CarWashState and
 	// added to the event queue.
-	CarWashState state = new CarWashState();
+	CarWashState state = new CarWashState(queue, 15);
 
 	// Keep executing events while there are still some events left.
 	public void run() {
-		while (queue.queueSize() != 0) {
+		do {
 			Event event = queue.first();
 			queue.removeFirst();
 			event.execute();
-		}
+		} while (queue.size() != 0);
 	}
-	
+
 }
