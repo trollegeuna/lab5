@@ -16,6 +16,7 @@ public class SimulationStarts extends Event {
 
 	@Override
 	public void execute() {
+		System.out.println("Time\tFast\tSlow\tId\tEvent\tIdleTime\tQueueTime\tQueueSize\tRejected");
 		Event firstArrival = new CarArrives(state, eventQueue);
 		firstArrival.startTime = 0;
 		eventQueue.add(firstArrival);
