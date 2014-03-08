@@ -30,19 +30,24 @@ public class CarLeaves extends Event {
 	@Override
 	public void execute() {
 
+		state.currentTime = startTime;
 		// Make a report
-		String reportLine = String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", state.currentTime,
-				state.availableFastWashers, state.availableSlowWashers, car.id,
-				name, state.totalIdleTime, state.totalQueueTime,
-				state.carQueue.size(), state.totalRejected);
+		String reportLine = String.format("%.2f\t%s\t%s\t%s\t%s\t%s\t\t%s\t\t%s\t\t%s",
+				state.currentTime, state.availableFastWashers,
+				state.availableSlowWashers, car.id, name, state.totalIdleTime,
+				state.totalQueueTime, state.carQueue.size(),
+				state.totalRejected);
+		System.out.println(reportLine);
 
 		if (fastWasher) {
 			state.availableFastWashers = state.availableFastWashers + 1;
 		} else {
 			state.availableSlowWashers = state.availableSlowWashers + 1;
 		}
-
-		eventQueue.add(new CarArrives(state, eventQueue));
+		// should be in CarArrives...
+		CarArrives arrivalEvent = new CarArrives(state, eventQueue);
+		arrivalEvent.startTime = state.currentTime;
+		eventQueue.add(arrivalEvent);
 
 	}
 
