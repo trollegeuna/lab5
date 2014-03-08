@@ -2,7 +2,7 @@ package lab5.simulator;
 
 public class SimState {
 	
-	public int currentTime;
+	public double currentTime;
 	public Event currentEvent;
 	
 	public boolean isRunning() {
