@@ -37,7 +37,9 @@ public class CarWashState extends SimState {
 	public CarWashState(int totalFastWashers, int totalSlowWashers) {
 		setFastWasherDistribution(fastDist[0], fastDist[1], seed);
 		setSlowWasherDistribution(slowDist[0], slowDist[1], seed);
-		eRS = new ExponentialRandomStream(lambda, seed);
+		setCarArrivalDistribution(lambda, seed);
+		this.totalFastWashers = totalFastWashers;
+		this.totalSlowWashers = totalSlowWashers;
 		availableFastWashers = totalFastWashers;
 		availableSlowWashers = totalSlowWashers;
 	}
