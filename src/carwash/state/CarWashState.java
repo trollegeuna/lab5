@@ -1,6 +1,7 @@
 package carwash.state;
 
-import carwars.events.SimulationStarts;
+import carwash.events.SimulationStarts;
+import lab5.simulator.Event;
 import lab5.simulator.EventQueue;
 import lab5.simulator.SimState;
 
@@ -14,9 +15,9 @@ public class CarWashState extends SimState {
 	public double stopTime;
 	public double currentTime = super.currentTime;
 
-	public UniformRandomStream fastURS;
-	public UniformRandomStream slowURS;
-	public ExponentialRandomStream eRS;
+	private UniformRandomStream fastURS;
+	private UniformRandomStream slowURS;
+	private ExponentialRandomStream eRS;
 
 	private double[] fastDist = new double[] { 2.8, 4.6 };
 	private double[] slowDist = new double[] { 3.5, 6.7 };
@@ -31,6 +32,20 @@ public class CarWashState extends SimState {
 	public FIFO carQueue;
 	public CarFactory carFactory;
 	public EventQueue eventQueue;
+	private Event previousEvent;
+	private Event currentEvent;
+	
+	public double getSlowWasherFinishTime() {
+		return currentTime + slowURS.next();
+	}
+	
+	public double getFastWasherFinishTime() {
+		return currentTime + fastURS.next();
+	}
+	
+	public double getNextArrivalTime() {
+		return currentTime + eRS.next();
+	}
 
 	public CarWashState(EventQueue eventQueue, double stopTime) {
 		this.stopTime = stopTime;
@@ -44,12 +59,49 @@ public class CarWashState extends SimState {
 		availableFastWashers = totalFastWashers;
 		availableSlowWashers = totalSlowWashers;
 	}
+	
+	public void setChanged() {
+		super.setChanged();
+	}
 
+	public void setTime(double time) {
+		currentTime = time;
+	}
+	
 	public boolean isFull() {
 		if (availableFastWashers == 0 && availableSlowWashers == 0) {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean washersAreAvailable() {
+		return (availableFastWashers != 0 || availableSlowWashers != 0);
+	}
+
+	public int amountAvailableWashers() {
+		return availableFastWashers + availableSlowWashers;
+	}
+
+	public void updateIdleTime() {
+		double currentEventTime = (currentEvent == null) ? 0 : currentEvent.startTime;
+		double previousEventTime = (previousEvent == null) ? 0 : previousEvent.startTime;
+
+		totalIdleTime = totalIdleTime + amountAvailableWashers()
+				* (currentEventTime - previousEventTime);
+	}
+	
+	public void setCurrentEvent(Event currentEvent) {
+		previousEvent = this.currentEvent;
+		this.currentEvent = currentEvent;
+	}
+	
+	public void updateQueueTime() {
+		double currentEventTime = (currentEvent == null) ? 0 : currentEvent.startTime;
+		double previousEventTime = (previousEvent == null) ? 0 : previousEvent.startTime;
+		
+		totalQueueTime = totalQueueTime + carQueue.size()
+				* Math.abs(currentEventTime - previousEventTime);
 	}
 
 }

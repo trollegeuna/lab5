@@ -1,4 +1,4 @@
-package carwars.events;
+package carwash.events;
 
 import carwash.state.CarWashState;
 import lab5.simulator.Event;
@@ -10,13 +10,19 @@ import lab5.simulator.EventQueue;
  */
 public class SimulationStarts extends Event {
 
-	public SimulationStarts(CarWashState state, EventQueue queue) {
-		super(state, queue);
+	CarWashState state;
+	EventQueue eventQueue;
+
+	public SimulationStarts(CarWashState state, EventQueue eventQueue) {
 		super.name = "Start";
+		this.state = state;
+		this.eventQueue = eventQueue;
 	}
 
 	@Override
 	public void execute() {
+		state.setCurrentEvent(this);
+		state.setTime(startTime);
 		System.out
 				.println("Time\tFast\tSlow\tId\tEvent\tIdleTime\tQueueTime\tQueueSize\tRejected");
 		String reportLine = String.format(
@@ -26,9 +32,12 @@ public class SimulationStarts extends Event {
 				state.totalQueueTime, state.carQueue.size(),
 				state.totalRejected);
 		System.out.println(reportLine);
+		
+		state.setChanged();
+		state.notifyObservers();
 
-		Event firstArrival = new CarArrives(state, eventQueue);
-		firstArrival.startTime = state.eRS.next();
+		Event firstArrival = new CarArrives(state.getNextArrivalTime(), state,
+				eventQueue);
 		eventQueue.add(firstArrival);
 	}
 

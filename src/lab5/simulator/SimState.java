@@ -1,13 +1,10 @@
 package lab5.simulator;
 
-public class SimState {
+import java.util.Observable;
+
+public class SimState extends Observable {
 
 	public double currentTime;
 	public Event currentEvent;
-
-	public boolean isRunning() {
-		// TODO
-		return false;
-	}
 
 }
