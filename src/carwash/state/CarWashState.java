@@ -34,7 +34,7 @@ public class CarWashState extends SimState {
 	private Event previousEvent;
 	private Event currentEvent;
 
-	public CarWashState() {
+	public CarWashState(int totalFastWashers, int totalSlowWashers) {
 		setFastWasherDistribution(fastDist[0], fastDist[1], seed);
 		setSlowWasherDistribution(slowDist[0], slowDist[1], seed);
 		eRS = new ExponentialRandomStream(lambda, seed);
@@ -73,12 +73,11 @@ public class CarWashState extends SimState {
 	public double[] getSlowWasherDistribution() {
 		return slowDist;
 	}
-	
-	
+
 	public double getSlowWasherFinishTime() {
 		return currentTime + slowURS.next();
 	}
-	
+
 	public boolean isFull() {
 		if (availableFastWashers == 0 && availableSlowWashers == 0) {
 			return true;

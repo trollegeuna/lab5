@@ -31,6 +31,12 @@ public class CarLeaves extends Event {
 
 	@Override
 	public void execute() {
+
+		if (startTime >= state.stopTime) {
+			new SimulationStops(state.currentTime, state, eventQueue).execute();
+			return;
+		}
+
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
 		state.updateIdleTime();
@@ -48,7 +54,7 @@ public class CarLeaves extends Event {
 			} else {
 				state.availableSlowWashers = state.availableSlowWashers + 1;
 			}
-			
+
 		} else {
 			double timeFinished;
 
