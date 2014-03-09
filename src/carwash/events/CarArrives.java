@@ -19,11 +19,12 @@ import lab5.simulator.EventQueue;
  * 
  */
 public class CarArrives extends Event {
-	
+
 	CarWashState state;
 	EventQueue eventQueue;
 
-	public CarArrives(double startTime, CarWashState state, EventQueue eventQueue) {
+	public CarArrives(double startTime, CarWashState state,
+			EventQueue eventQueue) {
 		this.state = state;
 		this.eventQueue = eventQueue;
 		super.name = "Arrive";
@@ -51,19 +52,11 @@ public class CarArrives extends Event {
 		}
 
 		state.updateQueueTime();
+		state.setCurrentCar(newCar);
 
-		// Make a report
-		String reportLine = String.format(
-				"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
-				state.currentTime, state.availableFastWashers,
-				state.availableSlowWashers, newCar.id, name,
-				state.totalIdleTime, state.totalQueueTime,
-				state.carQueue.size(), state.totalRejected);
-		System.out.println(reportLine);
-		
 		state.setChanged();
 		state.notifyObservers();
-		
+
 		if (state.carQueue.size() == state.maxCarQueueSize) {
 			state.totalRejected = state.totalRejected + 1;
 		} else {
@@ -81,21 +74,24 @@ public class CarArrives extends Event {
 				fastWasher = true;
 				state.availableFastWashers = state.availableFastWashers - 1;
 				timeFinished = state.getFastWasherFinishTime();
-				
+
 			} else {
 				state.availableSlowWashers = state.availableSlowWashers - 1;
 				timeFinished = state.getSlowWasherFinishTime();
 			}
 			// Remove first car from queue since it can be washed now
 			state.carQueue.removeFirst();
-			CarLeaves leaveEvent = new CarLeaves(timeFinished, state, eventQueue, carToWash,
-					fastWasher);
+			CarLeaves leaveEvent = new CarLeaves(timeFinished, state,
+					eventQueue, carToWash, fastWasher);
 			leaveEvent.startTime = timeFinished;
 			eventQueue.add(leaveEvent);
 
+		} else if (state.carQueue.size() != 0) {
+			state.totalCarsQueued = state.totalCarsQueued + 1;
 		}
 
-		CarArrives arrivalEvent = new CarArrives(state.getNextArrivalTime(), state, eventQueue);
+		CarArrives arrivalEvent = new CarArrives(state.getNextArrivalTime(),
+				state, eventQueue);
 		eventQueue.add(arrivalEvent);
 
 	}

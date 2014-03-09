@@ -37,15 +37,7 @@ public class CarLeaves extends Event {
 		state.setTime(startTime);
 		state.updateIdleTime();
 		state.updateQueueTime();
-
-		// Make a report
-		String reportLine = String.format(
-				"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
-				state.currentTime, state.availableFastWashers,
-				state.availableSlowWashers, car.id, name, state.totalIdleTime,
-				state.totalQueueTime, state.carQueue.size(),
-				state.totalRejected);
-		System.out.println(reportLine);
+		state.setCurrentCar(car);
 		
 		state.setChanged();
 		state.notifyObservers();
