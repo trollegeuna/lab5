@@ -1,4 +1,4 @@
-package lab5.simulator;
+package simulator;
 
 public class Simulator {
 
@@ -17,7 +17,7 @@ public class Simulator {
 
 		} while (!eventQueue.isEmpty());
 	}
-	
+
 	public void setEventQueue(EventQueue eventQueue) {
 		this.eventQueue = eventQueue;
 	}

@@ -1,7 +1,7 @@
 package carwash.events;
 
-import lab5.simulator.Event;
-import lab5.simulator.EventQueue;
+import simulator.Event;
+import simulator.EventQueue;
 import carwash.state.CarWashState;
 
 /**

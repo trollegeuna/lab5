@@ -1,7 +1,7 @@
 package carwash.state;
 
-import lab5.simulator.Event;
-import lab5.simulator.SimState;
+import simulator.Event;
+import simulator.SimState;
 
 public class CarWashState extends SimState {
 	public int totalFastWashers = 2;
@@ -11,7 +11,6 @@ public class CarWashState extends SimState {
 	public int availableSlowWashers;
 
 	public double stopTime = 15;
-	public double currentTime = super.currentTime;
 
 	private UniformRandomStream fastURS;
 	private UniformRandomStream slowURS;
@@ -30,7 +29,7 @@ public class CarWashState extends SimState {
 
 	public Car currentCar;
 	public FIFO carQueue = new FIFO();
-	public CarFactory carFactory = new CarFactory(this);
+	public CarFactory carFactory = new CarFactory();
 	private Event previousEvent;
 	private Event currentEvent;
 
@@ -97,6 +96,7 @@ public class CarWashState extends SimState {
 		eRS = new ExponentialRandomStream(lambda, seed);
 	}
 
+	@Override
 	public void setChanged() {
 		super.setChanged();
 	}

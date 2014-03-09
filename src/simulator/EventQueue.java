@@ -1,4 +1,4 @@
-package lab5.simulator;
+package simulator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,23 +13,23 @@ public class EventQueue {
 		Collections.sort(eventQueue);
 	}
 
-	public int size() {
-		return eventQueue.size();
+	public void clear() {
+		eventQueue.clear();
 	}
 
 	public Event first() {
 		return eventQueue.get(0);
 	}
 
+	public boolean isEmpty() {
+		return eventQueue.isEmpty();
+	}
+
 	public void removeFirst() {
 		eventQueue.remove(0);
 	}
 
-	public void clear() {
-		eventQueue.clear();
-	}
-	
-	public boolean isEmpty() {
-		return eventQueue.isEmpty();
+	public int size() {
+		return eventQueue.size();
 	}
 }

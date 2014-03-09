@@ -1,5 +1,7 @@
-package lab5.simulator;
+package main;
 
+import simulator.EventQueue;
+import simulator.Simulator;
 import carwash.events.SimulationStarts;
 import carwash.state.CarWashState;
 import carwash.view.CarWashView;

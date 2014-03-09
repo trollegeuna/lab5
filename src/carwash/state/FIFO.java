@@ -10,11 +10,16 @@ public class FIFO {
 		waitingQueue.add(car);
 	}
 
-	public boolean isEmpty() {
-		if (waitingQueue.size() == 0) {
-			return true;
+	public Car first() throws NoSuchElementException {
+		if (waitingQueue.isEmpty()) {
+			throw new NoSuchElementException();
+		} else {
+			return waitingQueue.get(0);
 		}
-		return false;
+	}
+
+	public boolean isEmpty() {
+		return waitingQueue.isEmpty();
 	}
 
 	public void removeFirst() throws NoSuchElementException {
@@ -22,14 +27,6 @@ public class FIFO {
 			throw new NoSuchElementException();
 		} else {
 			waitingQueue.remove(0);
-		}
-	}
-
-	public Car first() throws NoSuchElementException {
-		if (waitingQueue.isEmpty()) {
-			throw new NoSuchElementException();
-		} else {
-			return waitingQueue.get(0);
 		}
 	}
 

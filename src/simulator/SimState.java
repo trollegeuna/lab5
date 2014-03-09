@@ -1,8 +1,8 @@
-package lab5.simulator;
+package simulator;
 
 import java.util.Observable;
 
-public class SimState extends Observable {
+public abstract class SimState extends Observable {
 
 	public double currentTime;
 	public Event currentEvent;
