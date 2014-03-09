@@ -16,6 +16,10 @@ public class SimulationStops extends Event {
 
 	@Override
 	public void execute() {
+		double previousEventStartTime = state.currentTime;
+		state.currentTime = state.stopTime;
+		state.totalQueueTime = state.totalQueueTime + state.carQueue.size()
+				* (state.currentTime - previousEventStartTime);
 		String reportLine = String.format(
 				"%.2f\t%s\t%s\t-\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
 				state.currentTime, state.availableFastWashers,

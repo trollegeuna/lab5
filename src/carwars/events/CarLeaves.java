@@ -29,8 +29,10 @@ public class CarLeaves extends Event {
 
 	@Override
 	public void execute() {
+		double previousEventStartTime = state.currentTime;
 		state.currentTime = startTime;
-
+		state.totalQueueTime = state.totalQueueTime + state.carQueue.size()
+				* (state.currentTime - previousEventStartTime);
 		// Make a report
 		String reportLine = String.format(
 				"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
@@ -67,11 +69,7 @@ public class CarLeaves extends Event {
 			eventQueue.add(leaveEvent);
 
 		}
-		if (!state.carQueue.isEmpty()) {
-			// No washers available, update queue time.
-			state.totalQueueTime = state.totalQueueTime
-					+ (state.currentTime - state.carQueue.first().arrivalTime);
-		}
+
 
 	}
 
