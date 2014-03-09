@@ -3,6 +3,7 @@ package main;
 import simulator.EventQueue;
 import simulator.Simulator;
 import carwash.events.SimulationStarts;
+import carwash.events.SimulationStops;
 import carwash.state.CarWashState;
 import carwash.view.CarWashView;
 
@@ -21,6 +22,7 @@ public class MainSim {
 		stateOne.maxCarQueueSize = 5;
 
 		eventQueue.add(new SimulationStarts(stateOne, eventQueue));
+		eventQueue.add(new SimulationStops(15, stateOne, eventQueue));
 
 		CarWashView view = new CarWashView(stateOne);
 		stateOne.addObserver(view);
@@ -36,6 +38,7 @@ public class MainSim {
 		stateTwo.maxCarQueueSize = 7;
 
 		eventQueue.add(new SimulationStarts(stateTwo, eventQueue));
+		eventQueue.add(new SimulationStops(15, stateTwo, eventQueue));
 
 		view.setState(stateTwo);
 		stateTwo.addObserver(view);

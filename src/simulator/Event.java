@@ -1,7 +1,7 @@
 package simulator;
 
 public abstract class Event implements Comparable<Event> {
-	public String name;
+	public String eventName;
 	public double startTime;
 
 	@Override

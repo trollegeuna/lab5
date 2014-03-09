@@ -14,7 +14,7 @@ public class SimulationStarts extends Event {
 	EventQueue eventQueue;
 
 	public SimulationStarts(CarWashState state, EventQueue eventQueue) {
-		super.name = "Start";
+		super.eventName = "Start";
 		this.state = state;
 		this.eventQueue = eventQueue;
 	}

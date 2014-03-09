@@ -47,9 +47,10 @@ public class CarWashView extends SimView {
 			String reportLine = String.format(
 					"%.2f\t%s\t%s\t-\t%s\t%s\t\t%.2f\t\t%s\t\t%s",
 					state.currentTime, state.availableFastWashers,
-					state.availableSlowWashers, state.getCurrentEvent().name,
-					state.totalIdleTime, state.totalQueueTime,
-					state.carQueue.size(), state.totalRejected);
+					state.availableSlowWashers,
+					state.getCurrentEvent().eventName, state.totalIdleTime,
+					state.totalQueueTime, state.carQueue.size(),
+					state.totalRejected);
 			System.out.println(reportLine);
 
 		} else if (state.getCurrentEvent() instanceof SimulationStops) {
@@ -57,9 +58,10 @@ public class CarWashView extends SimView {
 			String reportLine = String.format(
 					"%.2f\t%s\t%s\t-\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
 					state.currentTime, state.availableFastWashers,
-					state.availableSlowWashers, state.getCurrentEvent().name,
-					state.totalIdleTime, state.totalQueueTime,
-					state.carQueue.size(), state.totalRejected);
+					state.availableSlowWashers,
+					state.getCurrentEvent().eventName, state.totalIdleTime,
+					state.totalQueueTime, state.carQueue.size(),
+					state.totalRejected);
 			System.out.println(reportLine);
 			System.out.println("----------------------------------------");
 			System.out.println(String.format("Total idle machine time: %.2f",
@@ -78,7 +80,7 @@ public class CarWashView extends SimView {
 					"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
 					state.currentTime, state.availableFastWashers,
 					state.availableSlowWashers, state.currentCar.id,
-					state.getCurrentEvent().name, state.totalIdleTime,
+					state.getCurrentEvent().eventName, state.totalIdleTime,
 					state.totalQueueTime, state.carQueue.size(),
 					state.totalRejected);
 			System.out.println(reportLine);

@@ -25,7 +25,7 @@ public class CarArrives extends Event {
 
 	public CarArrives(double startTime, CarWashState state,
 			EventQueue eventQueue) {
-		super.name = "Arrive";
+		super.eventName = "Arrive";
 		super.startTime = startTime;
 		this.state = state;
 		this.eventQueue = eventQueue;
@@ -33,11 +33,6 @@ public class CarArrives extends Event {
 
 	@Override
 	public void execute() {
-
-		if (startTime >= state.stopTime) {
-			new SimulationStops(state.currentTime, state, eventQueue).execute();
-			return;
-		}
 
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
@@ -85,8 +80,6 @@ public class CarArrives extends Event {
 
 		} else if (!state.carQueue.isEmpty()) {
 			state.totalCarsQueued = state.totalCarsQueued + 1;
-			// System.out.println("increased cars queued to " +
-			// state.totalCarsQueued);
 		}
 
 		CarArrives arrivalEvent = new CarArrives(state.getNextArrivalTime(),

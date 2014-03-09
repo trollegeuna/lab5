@@ -10,8 +10,6 @@ public class CarWashState extends SimState {
 	public int availableFastWashers;
 	public int availableSlowWashers;
 
-	public double stopTime = 15;
-
 	private UniformRandomStream fastURS;
 	private UniformRandomStream slowURS;
 	private ExponentialRandomStream eRS;

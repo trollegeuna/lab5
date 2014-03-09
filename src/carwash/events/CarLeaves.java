@@ -21,7 +21,7 @@ public class CarLeaves extends Event {
 
 	public CarLeaves(double startTime, CarWashState state,
 			EventQueue eventQueue, Car car, boolean fastWasher) {
-		super.name = "Leave";
+		super.eventName = "Leave";
 		super.startTime = startTime;
 		this.state = state;
 		this.eventQueue = eventQueue;
@@ -31,11 +31,6 @@ public class CarLeaves extends Event {
 
 	@Override
 	public void execute() {
-
-		if (startTime >= state.stopTime) {
-			new SimulationStops(state.currentTime, state, eventQueue).execute();
-			return;
-		}
 
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
