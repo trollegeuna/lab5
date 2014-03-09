@@ -11,9 +11,7 @@ import lab5.simulator.EventQueue;
  * Add used washer to available washers.
  * 
  * If car queue is not empty, create a new car arrives-event.
- * 
  */
-
 public class CarLeaves extends Event {
 
 	CarWashState state;
@@ -23,10 +21,10 @@ public class CarLeaves extends Event {
 
 	public CarLeaves(double startTime, CarWashState state,
 			EventQueue eventQueue, Car car, boolean fastWasher) {
-		this.state = state;
-		this.eventQueue = eventQueue;
 		super.name = "Leave";
 		super.startTime = startTime;
+		this.state = state;
+		this.eventQueue = eventQueue;
 		this.car = car;
 		this.fastWasher = fastWasher;
 	}
@@ -38,18 +36,20 @@ public class CarLeaves extends Event {
 		state.updateIdleTime();
 		state.updateQueueTime();
 		state.setCurrentCar(car);
-		
+
 		state.setChanged();
 		state.notifyObservers();
 
+		// Schedule a new leave event immediately if there are cars waiting.
+		// Otherwise, increase available washers.
 		if (state.carQueue.isEmpty()) {
 			if (fastWasher) {
 				state.availableFastWashers = state.availableFastWashers + 1;
 			} else {
 				state.availableSlowWashers = state.availableSlowWashers + 1;
 			}
+			
 		} else {
-
 			double timeFinished;
 
 			if (fastWasher) {
@@ -64,7 +64,6 @@ public class CarLeaves extends Event {
 			CarLeaves leaveEvent = new CarLeaves(timeFinished, state,
 					eventQueue, car, fastWasher);
 			eventQueue.add(leaveEvent);
-
 		}
 
 	}

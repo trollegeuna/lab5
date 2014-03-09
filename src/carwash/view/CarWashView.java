@@ -9,9 +9,13 @@ import lab5.simulator.SimView;
 
 public class CarWashView extends SimView {
 
-	CarWashState state;
+	private CarWashState state;
 
 	public CarWashView(CarWashState state) {
+		setState(state);
+	}
+	
+	public void setState(CarWashState state) {
 		this.state = state;
 	}
 
@@ -25,13 +29,13 @@ public class CarWashView extends SimView {
 			System.out.println(String.format("Slow machines: %s",
 					state.totalSlowWashers));
 			System.out.println(String.format("Fast distribution: (%s, %s)",
-					state.fastDist[0], state.fastDist[1]));
+					state.getFastWasherDistribution()[0], state.getFastWasherDistribution()[1]));
 			System.out.println(String.format("Slow distribution: (%s, %s)",
-					state.slowDist[0], state.slowDist[1]));
+					state.getSlowWasherDistribution()[0], state.getSlowWasherDistribution()[1]));
 			System.out.println(String.format(
-					"Exponential distribution with lambda = %s", state.lambda));
-			System.out.println(String.format("Seed = %s", state.seed));
-			System.out.println(String.format("Max Queue size = %s",
+					"Exponential distribution with lambda = %s", state.getLambda()));
+			System.out.println(String.format("Seed = %s", state.getSeed()));
+			System.out.println(String.format("Max Queue size: %s",
 					state.maxCarQueueSize));
 			System.out.println("----------------------------------------");
 
@@ -63,6 +67,7 @@ public class CarWashView extends SimView {
 					state.meanQueueingTime()));
 			System.out.println(String.format("Rejected cars: %s",
 					state.totalRejected));
+			System.out.println();
 			
 		} else {
 

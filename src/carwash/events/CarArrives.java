@@ -25,10 +25,10 @@ public class CarArrives extends Event {
 
 	public CarArrives(double startTime, CarWashState state,
 			EventQueue eventQueue) {
-		this.state = state;
-		this.eventQueue = eventQueue;
 		super.name = "Arrive";
 		super.startTime = startTime;
+		this.state = state;
+		this.eventQueue = eventQueue;
 	}
 
 	@Override
@@ -38,18 +38,12 @@ public class CarArrives extends Event {
 			new SimulationStops(state.currentTime, state, eventQueue).execute();
 			return;
 		}
+
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
 		state.updateIdleTime();
 
 		Car newCar = state.carFactory.makeCar();
-
-		Car carToWash;
-		if (state.carQueue.isEmpty()) {
-			carToWash = newCar;
-		} else {
-			carToWash = state.carQueue.first();
-		}
 
 		state.updateQueueTime();
 		state.setCurrentCar(newCar);
@@ -63,14 +57,16 @@ public class CarArrives extends Event {
 			state.carQueue.add(newCar);
 		}
 
+		Car carToWash = state.carQueue.first();
+
 		if (state.washersAreAvailable()) {
 			// Washer available, schedule time for leave event of first car in
 			// queue.
 			double timeFinished;
 			boolean fastWasher = false;
+
+			// Determine which type of washer is available
 			if (state.availableFastWashers != 0) {
-				// Fast washer available, schedule time for leave event of first
-				// car in queue.
 				fastWasher = true;
 				state.availableFastWashers = state.availableFastWashers - 1;
 				timeFinished = state.getFastWasherFinishTime();
@@ -81,19 +77,22 @@ public class CarArrives extends Event {
 			}
 			// Remove first car from queue since it can be washed now
 			state.carQueue.removeFirst();
+
+			// Schedule leave event at the time the wash is finished.
 			CarLeaves leaveEvent = new CarLeaves(timeFinished, state,
 					eventQueue, carToWash, fastWasher);
 			leaveEvent.startTime = timeFinished;
 			eventQueue.add(leaveEvent);
 
-		} else if (state.carQueue.size() != 0) {
+		} else if (!state.carQueue.isEmpty()) {
 			state.totalCarsQueued = state.totalCarsQueued + 1;
+			// System.out.println("increased cars queued to " +
+			// state.totalCarsQueued);
 		}
 
 		CarArrives arrivalEvent = new CarArrives(state.getNextArrivalTime(),
 				state, eventQueue);
 		eventQueue.add(arrivalEvent);
-
 	}
 
 }

@@ -28,4 +28,8 @@ public class EventQueue {
 	public void clear() {
 		eventQueue.clear();
 	}
+	
+	public boolean isEmpty() {
+		return eventQueue.isEmpty();
+	}
 }

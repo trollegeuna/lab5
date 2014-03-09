@@ -14,17 +14,16 @@ public class SimulationStops extends Event {
 
 	public SimulationStops(double startTime, CarWashState state,
 			EventQueue eventQueue) {
-		this.state = state;
-		this.eventQueue = eventQueue;
 		super.name = "Stop";
 		super.startTime = startTime;
+		this.state = state;
+		this.eventQueue = eventQueue;
 	}
 
 	@Override
 	public void execute() {
-
-		state.setCurrentEvent(this);
 		startTime = state.stopTime;
+		state.setCurrentEvent(this);
 		state.setTime(startTime);
 		state.updateIdleTime();
 		state.updateQueueTime();

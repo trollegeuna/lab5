@@ -1,28 +1,26 @@
 package carwash.state;
 
-import carwash.events.SimulationStarts;
 import lab5.simulator.Event;
-import lab5.simulator.EventQueue;
 import lab5.simulator.SimState;
 
 public class CarWashState extends SimState {
-	final public int totalFastWashers = 2;
-	final public int totalSlowWashers = 2;
+	public int totalFastWashers = 2;
+	public int totalSlowWashers = 2;
 	public int totalAmountOfWashers;
 	public int availableFastWashers;
 	public int availableSlowWashers;
 
-	public double stopTime;
+	public double stopTime = 15;
 	public double currentTime = super.currentTime;
 
 	private UniformRandomStream fastURS;
 	private UniformRandomStream slowURS;
 	private ExponentialRandomStream eRS;
 
-	public double[] fastDist = new double[] { 2.8, 4.6 };
-	public double[] slowDist = new double[] { 3.5, 6.7 };
-	public double lambda = 2;
-	public long seed = 1234;
+	private double[] fastDist = new double[] { 2.8, 4.6 };
+	private double[] slowDist = new double[] { 3.5, 6.7 };
+	private double lambda = 2;
+	private long seed = 1234;
 
 	public double totalQueueTime;
 	public double totalIdleTime;
@@ -31,53 +29,56 @@ public class CarWashState extends SimState {
 	public int totalCarsQueued;
 
 	public Car currentCar;
-	public FIFO carQueue;
-	public CarFactory carFactory;
-	public EventQueue eventQueue;
+	public FIFO carQueue = new FIFO();
+	public CarFactory carFactory = new CarFactory(this);
 	private Event previousEvent;
 	private Event currentEvent;
 
-	public void setCurrentCar(Car car) {
-		currentCar = car;
+	public CarWashState() {
+		setFastWasherDistribution(fastDist[0], fastDist[1], seed);
+		setSlowWasherDistribution(slowDist[0], slowDist[1], seed);
+		eRS = new ExponentialRandomStream(lambda, seed);
+		availableFastWashers = totalFastWashers;
+		availableSlowWashers = totalSlowWashers;
+	}
+
+	public int amountAvailableWashers() {
+		return availableFastWashers + availableSlowWashers;
 	}
 
 	public Event getCurrentEvent() {
 		return currentEvent;
 	}
 
-	public double getSlowWasherFinishTime() {
-		return currentTime + slowURS.next();
+	public double[] getFastWasherDistribution() {
+		return fastDist;
 	}
 
 	public double getFastWasherFinishTime() {
 		return currentTime + fastURS.next();
 	}
 
+	public double getLambda() {
+		return lambda;
+	}
+
 	public double getNextArrivalTime() {
 		return currentTime + eRS.next();
 	}
 
-	public CarWashState(EventQueue eventQueue, double stopTime) {
-		this.stopTime = stopTime;
-		this.eventQueue = eventQueue;
-		eventQueue.add(new SimulationStarts(this, eventQueue));
-		carFactory = new CarFactory(this);
-		carQueue = new FIFO();
-		fastURS = new UniformRandomStream(fastDist[0], fastDist[1], seed);
-		slowURS = new UniformRandomStream(slowDist[0], slowDist[1], seed);
-		eRS = new ExponentialRandomStream(lambda, seed);
-		availableFastWashers = totalFastWashers;
-		availableSlowWashers = totalSlowWashers;
+	public long getSeed() {
+		return seed;
 	}
 
-	public void setChanged() {
-		super.setChanged();
+	public double[] getSlowWasherDistribution() {
+		return slowDist;
 	}
-
-	public void setTime(double time) {
-		currentTime = time;
+	
+	
+	public double getSlowWasherFinishTime() {
+		return currentTime + slowURS.next();
 	}
-
+	
 	public boolean isFull() {
 		if (availableFastWashers == 0 && availableSlowWashers == 0) {
 			return true;
@@ -85,12 +86,45 @@ public class CarWashState extends SimState {
 		return false;
 	}
 
-	public boolean washersAreAvailable() {
-		return (availableFastWashers != 0 || availableSlowWashers != 0);
+	public double meanQueueingTime() {
+		return (totalCarsQueued == 0) ? 0 : totalQueueTime / totalCarsQueued;
 	}
 
-	public int amountAvailableWashers() {
-		return availableFastWashers + availableSlowWashers;
+	public void setCarArrivalDistribution(double lambda, long seed) {
+		this.lambda = lambda;
+		this.seed = seed;
+		eRS = new ExponentialRandomStream(lambda, seed);
+	}
+
+	public void setChanged() {
+		super.setChanged();
+	}
+
+	public void setCurrentCar(Car car) {
+		currentCar = car;
+	}
+
+	public void setCurrentEvent(Event currentEvent) {
+		previousEvent = this.currentEvent;
+		this.currentEvent = currentEvent;
+	}
+
+	public void setFastWasherDistribution(double low, double high, long seed) {
+		fastDist[0] = low;
+		fastDist[1] = high;
+		this.seed = seed;
+		fastURS = new UniformRandomStream(low, high, seed);
+	}
+
+	public void setSlowWasherDistribution(double low, double high, long seed) {
+		slowDist[0] = low;
+		slowDist[1] = high;
+		this.seed = seed;
+		slowURS = new UniformRandomStream(low, high, seed);
+	}
+
+	public void setTime(double time) {
+		currentTime = time;
 	}
 
 	public void updateIdleTime() {
@@ -103,11 +137,6 @@ public class CarWashState extends SimState {
 				* (currentEventTime - previousEventTime);
 	}
 
-	public void setCurrentEvent(Event currentEvent) {
-		previousEvent = this.currentEvent;
-		this.currentEvent = currentEvent;
-	}
-
 	public void updateQueueTime() {
 		double currentEventTime = (currentEvent == null) ? 0
 				: currentEvent.startTime;
@@ -118,8 +147,8 @@ public class CarWashState extends SimState {
 				* Math.abs(currentEventTime - previousEventTime);
 	}
 
-	public double meanQueueingTime() {
-		return (totalCarsQueued == 0) ? 0 : totalQueueTime / totalCarsQueued;
+	public boolean washersAreAvailable() {
+		return (availableFastWashers != 0 || availableSlowWashers != 0);
 	}
 
 }
