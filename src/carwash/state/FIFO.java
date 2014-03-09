@@ -5,12 +5,9 @@ import java.util.NoSuchElementException;
 
 public class FIFO {
 	private ArrayList<Car> waitingQueue = new ArrayList<Car>();
-	private int maxQueueSize = 5;
 
 	public void add(Car car) {
-		if (waitingQueue.size() < maxQueueSize) {
-			waitingQueue.add(car);
-		}
+		waitingQueue.add(car);
 	}
 
 	public boolean isEmpty() {
