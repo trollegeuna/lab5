@@ -7,6 +7,7 @@ import lab5.simulator.SimState;
 public class CarWashState extends SimState {
 	final public int totalFastWashers = 2;
 	final public int totalSlowWashers = 2;
+	public int totalAmountOfWashers;
 	public int availableFastWashers;
 	public int availableSlowWashers;
 
@@ -25,6 +26,7 @@ public class CarWashState extends SimState {
 	public double totalQueueTime;
 	public double totalIdleTime;
 	public int totalRejected;
+	public int maxCarQueueSize = 5;
 
 	public FIFO carQueue;
 	public CarFactory carFactory;

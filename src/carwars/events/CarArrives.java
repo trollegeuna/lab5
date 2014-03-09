@@ -27,25 +27,50 @@ public class CarArrives extends Event {
 
 	@Override
 	public void execute() {
-		if (state.currentTime >= state.stopTime) {
-			eventQueue.add(new SimulationStops(state, eventQueue));
+
+		boolean washersAreAvailable = (state.availableFastWashers != 0 || state.availableSlowWashers != 0);
+		int amountAvailableWashers = state.availableFastWashers
+				+ state.availableSlowWashers;
+
+		if (startTime >= state.stopTime) {
+			state.currentTime = state.stopTime;
+			new SimulationStops(state, eventQueue).execute();
 			return;
 		}
-		state.currentTime = startTime;
-		// Add a new car
-		Car newCar = state.carFactory.makeCar();
-		state.carQueue.add(newCar);
 
+		if (washersAreAvailable) {
+			state.totalIdleTime = state.totalIdleTime + amountAvailableWashers
+					* (startTime - state.currentTime);
+		}
+		state.currentTime = startTime;
+
+		Car newCar = state.carFactory.makeCar();
+		Car firstCar;
+		if (state.carQueue.isEmpty()) {
+			firstCar = newCar;
+		} else {
+			firstCar = state.carQueue.first();
+		}
+		
+		state.totalQueueTime = state.totalQueueTime
+				+ (state.currentTime - firstCar.arrivalTime);
+		
 		// Make a report
 		String reportLine = String.format(
-				"%.2f\t%s\t%s\t%s\t%s\t%s\t\t%.2f\t\t%s\t\t%s",
+				"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
 				state.currentTime, state.availableFastWashers,
 				state.availableSlowWashers, newCar.id, name,
 				state.totalIdleTime, state.totalQueueTime,
 				state.carQueue.size(), state.totalRejected);
 		System.out.println(reportLine);
 
-		if (state.availableFastWashers != 0 || state.availableSlowWashers != 0) {
+		if (state.carQueue.size() == state.maxCarQueueSize) {
+			state.totalRejected = state.totalRejected + 1;
+		} else {
+			state.carQueue.add(newCar);
+		}
+
+		if (washersAreAvailable) {
 			// Washer available, schedule time for leave event of first car in
 			// queue.
 			double timeFinished;
@@ -62,22 +87,19 @@ public class CarArrives extends Event {
 				double timeToWash = state.slowURS.next();
 				timeFinished = state.currentTime + timeToWash;
 			}
-			Car car = state.carQueue.first();
+			// Remove first car from queue since it can be washed now
 			state.carQueue.removeFirst();
-
-			CarLeaves leaveEvent = new CarLeaves(state, eventQueue, car,
+			CarLeaves leaveEvent = new CarLeaves(state, eventQueue, firstCar,
 					fastWasher);
 			leaveEvent.startTime = timeFinished;
 			eventQueue.add(leaveEvent);
 
 		} else {
 			// No washers available, update queue time.
-			Car firstCar = state.carQueue.first();
-			state.totalQueueTime = state.totalQueueTime
-					+ (state.currentTime - firstCar.arrivalTime);
+			// state.totalQueueTime = state.totalQueueTime
+			// + (state.currentTime - state.carQueue.first().arrivalTime);
 		}
 
-		// should be in CarArrives...
 		CarArrives arrivalEvent = new CarArrives(state, eventQueue);
 		arrivalEvent.startTime = state.currentTime + state.eRS.next();
 		eventQueue.add(arrivalEvent);

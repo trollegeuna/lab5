@@ -29,26 +29,49 @@ public class CarLeaves extends Event {
 
 	@Override
 	public void execute() {
-
 		state.currentTime = startTime;
+
 		// Make a report
 		String reportLine = String.format(
-				"%.2f\t%s\t%s\t%s\t%s\t%s\t\t%.2f\t\t%s\t\t%s",
+				"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
 				state.currentTime, state.availableFastWashers,
 				state.availableSlowWashers, car.id, name, state.totalIdleTime,
 				state.totalQueueTime, state.carQueue.size(),
 				state.totalRejected);
 		System.out.println(reportLine);
 
-		if (fastWasher) {
-			state.availableFastWashers = state.availableFastWashers + 1;
+		if (state.carQueue.isEmpty()) {
+			if (fastWasher) {
+				state.availableFastWashers = state.availableFastWashers + 1;
+			} else {
+				state.availableSlowWashers = state.availableSlowWashers + 1;
+			}
 		} else {
-			state.availableSlowWashers = state.availableSlowWashers + 1;
+
+			double timeFinished;
+
+			if (fastWasher) {
+				double timeToWash = state.fastURS.next();
+				timeFinished = state.currentTime + timeToWash;
+			} else {
+				double timeToWash = state.slowURS.next();
+				timeFinished = state.currentTime + timeToWash;
+			}
+
+			Car car = state.carQueue.first();
+			state.carQueue.removeFirst();
+
+			CarLeaves leaveEvent = new CarLeaves(state, eventQueue, car,
+					fastWasher);
+			leaveEvent.startTime = timeFinished;
+			eventQueue.add(leaveEvent);
+
 		}
-		// should be in CarArrives...
-		CarArrives arrivalEvent = new CarArrives(state, eventQueue);
-		arrivalEvent.startTime = state.currentTime;
-		eventQueue.add(arrivalEvent);
+		if (!state.carQueue.isEmpty()) {
+			// No washers available, update queue time.
+			state.totalQueueTime = state.totalQueueTime
+					+ (state.currentTime - state.carQueue.first().arrivalTime);
+		}
 
 	}
 

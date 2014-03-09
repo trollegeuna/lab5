@@ -26,8 +26,9 @@ public class SimulationStarts extends Event {
 				state.totalQueueTime, state.carQueue.size(),
 				state.totalRejected);
 		System.out.println(reportLine);
+
 		Event firstArrival = new CarArrives(state, eventQueue);
-		firstArrival.startTime = 0;
+		firstArrival.startTime = state.eRS.next();
 		eventQueue.add(firstArrival);
 	}
 
