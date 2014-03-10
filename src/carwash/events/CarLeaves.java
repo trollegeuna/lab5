@@ -6,11 +6,7 @@ import carwash.state.Car;
 import carwash.state.CarWashState;
 
 /**
- * This will contain:
- * 
- * Add used washer to available washers.
- * 
- * If car queue is not empty, create a new car arrives-event.
+ * Simulates finishing the washing of a car at the car wash.
  */
 public class CarLeaves extends Event {
 
@@ -29,15 +25,21 @@ public class CarLeaves extends Event {
 		this.fastWasher = fastWasher;
 	}
 
+	/**
+	 * Checks if there are any cars waiting to be washed after the washing of
+	 * another is finished. If so, a new leave-event is scheduled, otherwise the
+	 * washer used is released.
+	 */
 	@Override
 	public void execute() {
-
+		// Update the state data
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
 		state.updateIdleTime();
 		state.updateQueueTime();
 		state.setCurrentCar(car);
 
+		// Display the new state
 		state.setChanged();
 		state.notifyObservers();
 
@@ -51,19 +53,15 @@ public class CarLeaves extends Event {
 			}
 
 		} else {
-			double timeFinished;
+			double timeFinished = (fastWasher) ? state
+					.getFastWasherFinishTime() : state
+					.getSlowWasherFinishTime();
 
-			if (fastWasher) {
-				timeFinished = state.getFastWasherFinishTime();
-			} else {
-				timeFinished = state.getSlowWasherFinishTime();
-			}
-
-			Car car = state.carQueue.first();
+			Car carToWash = state.carQueue.first();
 			state.carQueue.removeFirst();
 
 			CarLeaves leaveEvent = new CarLeaves(timeFinished, state,
-					eventQueue, car, fastWasher);
+					eventQueue, carToWash, fastWasher);
 			eventQueue.add(leaveEvent);
 		}
 

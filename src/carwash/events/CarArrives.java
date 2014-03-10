@@ -6,17 +6,7 @@ import carwash.state.Car;
 import carwash.state.CarWashState;
 
 /**
- * This will contain:
- * 
- * Check if current sim time has exceeded max sim time.
- * 
- * Create a new car, add it to car queue.
- * 
- * Check if washer is free, if so, simulate washing by adding leave event to
- * event queue after random time. Remove washer from available washers. remove
- * the first car from the queue.
- * 
- * 
+ * Simulates a new car arriving at the car wash.
  */
 public class CarArrives extends Event {
 
@@ -31,45 +21,50 @@ public class CarArrives extends Event {
 		this.eventQueue = eventQueue;
 	}
 
+	/**
+	 * Updates the car wash state, creates a new car and schedules a washing if
+	 * possible. Finally a new arrival event is scheduled.
+	 */
 	@Override
 	public void execute() {
-
+		// Update the state data
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
 		state.updateIdleTime();
 		state.updateQueueTime();
 
-		Car newCar = state.carFactory.makeCar();
-		state.setCurrentCar(newCar);
+		// A new car arrives
+		Car arrivedCar = state.carFactory.makeCar();
+		state.setCurrentCar(arrivedCar);
 
+		// Display the new state
 		state.setChanged();
 		state.notifyObservers();
 
-		if (state.carQueue.size() == state.maxCarQueueSize) {
+		// Check if we can queue the new car or have to reject it
+		if (state.carQueueIsFull()) {
 			state.totalRejected = state.totalRejected + 1;
 		} else {
-			state.carQueue.add(newCar);
+			state.carQueue.add(arrivedCar);
 		}
 
-		Car carToWash = state.carQueue.first();
-
-		if (state.washersAreAvailable()) {
-			// Washer available, schedule time for leave event of first car in
-			// queue.
-			double timeFinished;
-			boolean fastWasher = false;
-
+		// Check if there are washers available
+		if (state.hasAvailableWashers()) {
 			// Determine which type of washer is available
+			boolean fastWasher = false;
 			if (state.availableFastWashers != 0) {
 				fastWasher = true;
 				state.availableFastWashers = state.availableFastWashers - 1;
-				timeFinished = state.getFastWasherFinishTime();
-
 			} else {
 				state.availableSlowWashers = state.availableSlowWashers - 1;
-				timeFinished = state.getSlowWasherFinishTime();
 			}
+
+			double timeFinished = (fastWasher) ? state
+					.getFastWasherFinishTime() : state
+					.getSlowWasherFinishTime();
+
 			// Remove first car from queue since it can be washed now
+			Car carToWash = state.carQueue.first();
 			state.carQueue.removeFirst();
 
 			// Schedule leave event at the time the wash is finished.
@@ -79,9 +74,11 @@ public class CarArrives extends Event {
 			eventQueue.add(leaveEvent);
 
 		} else if (!state.carQueue.isEmpty()) {
+			// No washers available
 			state.totalCarsQueued = state.totalCarsQueued + 1;
 		}
 
+		// Schedule a new arrival
 		CarArrives arrivalEvent = new CarArrives(state.getNextArrivalTime(),
 				state, eventQueue);
 		eventQueue.add(arrivalEvent);

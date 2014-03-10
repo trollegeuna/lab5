@@ -1,9 +1,15 @@
 package simulator;
 
+/**
+ * An abstract event.
+ */
 public abstract class Event implements Comparable<Event> {
 	public String eventName;
 	public double startTime;
 
+	/**
+	 * Compares this event with another. Used for ordering the event queue.
+	 */
 	@Override
 	public int compareTo(Event otherEvent) {
 		if (this.startTime == otherEvent.startTime) {
@@ -15,5 +21,8 @@ public abstract class Event implements Comparable<Event> {
 		}
 	}
 
+	/**
+	 * Execute this event.
+	 */
 	public abstract void execute();
 }

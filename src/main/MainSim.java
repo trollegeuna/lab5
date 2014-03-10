@@ -7,8 +7,17 @@ import carwash.events.SimulationStops;
 import carwash.state.CarWashState;
 import carwash.view.CarWashView;
 
+/**
+ * Main class. Create the event queue, simulation state and view here.
+ */
 public class MainSim {
 
+	/**
+	 * Main method. Runs the simulation.
+	 * 
+	 * @param args
+	 *            Not used
+	 */
 	public static void main(String[] args) {
 		long seed = 1234;
 
@@ -19,7 +28,7 @@ public class MainSim {
 		stateOne.setFastWasherDistribution(2.8, 4.6, seed);
 		stateOne.setSlowWasherDistribution(3.5, 6.7, seed);
 		stateOne.setCarArrivalDistribution(2, seed);
-		stateOne.maxCarQueueSize = 5;
+		stateOne.setMaxCarQueueSize(5);
 
 		eventQueue.add(new SimulationStarts(stateOne, eventQueue));
 		eventQueue.add(new SimulationStops(15, stateOne, eventQueue));
@@ -35,7 +44,7 @@ public class MainSim {
 		stateTwo.setFastWasherDistribution(2.8, 5.6, seed);
 		stateTwo.setSlowWasherDistribution(4.5, 6.7, seed);
 		stateTwo.setCarArrivalDistribution(1.5, seed);
-		stateTwo.maxCarQueueSize = 7;
+		stateTwo.setMaxCarQueueSize(7);
 
 		eventQueue.add(new SimulationStarts(stateTwo, eventQueue));
 		eventQueue.add(new SimulationStops(15, stateTwo, eventQueue));

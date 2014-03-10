@@ -1,5 +1,8 @@
 package carwash.state;
 
+/**
+ * Represents a car with an id number.
+ */
 public class Car {
 	
 	public int id;

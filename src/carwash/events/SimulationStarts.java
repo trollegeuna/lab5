@@ -19,14 +19,20 @@ public class SimulationStarts extends Event {
 		this.eventQueue = eventQueue;
 	}
 
+	/**
+	 * Create the first arrival and adds it to the event queue.
+	 */
 	@Override
 	public void execute() {
+		// Update the state data
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
 
+		// Display the new state
 		state.setChanged();
 		state.notifyObservers();
 
+		// Schedule the first arrival
 		Event firstArrival = new CarArrives(state.getNextArrivalTime(), state,
 				eventQueue);
 		eventQueue.add(firstArrival);

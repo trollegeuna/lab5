@@ -5,7 +5,7 @@ import simulator.EventQueue;
 import carwash.state.CarWashState;
 
 /**
- * When main loop encounters this in the event queue the simulation is stopped.
+ * Makes the simulation stop. It will clear the event queue.
  */
 public class SimulationStops extends Event {
 
@@ -20,13 +20,15 @@ public class SimulationStops extends Event {
 		this.eventQueue = eventQueue;
 	}
 
+	/**
+	 * Clears the event queue after updating and displaying the state data.
+	 */
 	@Override
 	public void execute() {
 		state.setCurrentEvent(this);
 		state.setTime(startTime);
 		state.updateIdleTime();
 		state.updateQueueTime();
-		state.setCurrentCar(null);
 
 		state.setChanged();
 		state.notifyObservers();

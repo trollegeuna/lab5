@@ -1,10 +1,18 @@
 package carwash.state;
 
+/**
+ * Creates cars and keeps track of their id numbers.
+ */
 public class CarFactory {
-	private int index = -1;
+	private int id = -1;
 
+	/**
+	 * Creates a new car.
+	 * 
+	 * @return The new car.
+	 */
 	public Car makeCar() {
-		index++;
-		return new Car(index);
+		id = id + 1;
+		return new Car(id);
 	}
 }

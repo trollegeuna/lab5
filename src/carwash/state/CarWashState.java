@@ -3,10 +3,12 @@ package carwash.state;
 import simulator.Event;
 import simulator.SimState;
 
+/**
+ * Represents the current state of a car wash.
+ */
 public class CarWashState extends SimState {
-	public int totalFastWashers = 2;
-	public int totalSlowWashers = 2;
-	public int totalAmountOfWashers;
+	private int totalFastWashers = 2;
+	private int totalSlowWashers = 2;
 	public int availableFastWashers;
 	public int availableSlowWashers;
 
@@ -19,15 +21,17 @@ public class CarWashState extends SimState {
 	private double lambda = 2;
 	private long seed = 1234;
 
-	public double totalQueueTime;
-	public double totalIdleTime;
+	private double totalQueueTime;
+	private double totalIdleTime;
 	public int totalRejected;
-	public int maxCarQueueSize = 5;
 	public int totalCarsQueued;
 
 	public Car currentCar;
 	public FIFO carQueue = new FIFO();
+	private int maxCarQueueSize = 5;
+
 	public CarFactory carFactory = new CarFactory();
+
 	private Event previousEvent;
 	private Event currentEvent;
 
@@ -41,73 +45,206 @@ public class CarWashState extends SimState {
 		availableSlowWashers = totalSlowWashers;
 	}
 
+	/**
+	 * Total amount of both fast and slow washers.
+	 * 
+	 * @return
+	 */
 	public int amountAvailableWashers() {
 		return availableFastWashers + availableSlowWashers;
 	}
 
+	/**
+	 * True if car queue is full.
+	 * 
+	 * @return
+	 */
+	public boolean carQueueIsFull() {
+		return (carQueue.size() >= maxCarQueueSize);
+	}
+
+	/**
+	 * Returns the current event.
+	 * 
+	 * @return
+	 */
 	public Event getCurrentEvent() {
 		return currentEvent;
 	}
 
+	/**
+	 * The random distribution for fast washer job time.
+	 * 
+	 * @return
+	 */
 	public double[] getFastWasherDistribution() {
 		return fastDist;
 	}
 
+	/**
+	 * The time when a fast washer will finish the job, based on current time.
+	 * 
+	 * @return
+	 */
 	public double getFastWasherFinishTime() {
 		return currentTime + fastURS.next();
 	}
 
+	/**
+	 * Lambda for car arrival distribution.
+	 * 
+	 * @return
+	 */
 	public double getLambda() {
 		return lambda;
 	}
 
+	/**
+	 * Maximum allowed size of car queue.
+	 * 
+	 * @return
+	 */
+	public int getMaxCarQueueSize() {
+		return maxCarQueueSize;
+	}
+
+	/**
+	 * The time when the next car will arrive, based on current time.
+	 * 
+	 * @return
+	 */
 	public double getNextArrivalTime() {
 		return currentTime + eRS.next();
 	}
 
+	/**
+	 * Seed for random number generation.
+	 * 
+	 * @return
+	 */
 	public long getSeed() {
 		return seed;
 	}
 
+	/**
+	 * The random distribution for slow washer job time.
+	 * 
+	 * @return
+	 */
 	public double[] getSlowWasherDistribution() {
 		return slowDist;
 	}
 
+	/**
+	 * The time when a slow washer will finish the job, based on current time.
+	 * 
+	 * @return
+	 */
 	public double getSlowWasherFinishTime() {
 		return currentTime + slowURS.next();
 	}
 
-	public boolean isFull() {
-		if (availableFastWashers == 0 && availableSlowWashers == 0) {
-			return true;
-		}
-		return false;
+	/**
+	 * How many fast washers the car wash has in total.
+	 * 
+	 * @return
+	 */
+	public int getTotalFastWashers() {
+		return totalFastWashers;
 	}
 
+	/**
+	 * The total time all washers have spent idle.
+	 * 
+	 * @return
+	 */
+	public double getTotalIdleTime() {
+		return totalIdleTime;
+	}
+
+	/**
+	 * The total time cars spent in queue..
+	 * 
+	 * @return
+	 */
+	public double getTotalQueueTime() {
+		return totalQueueTime;
+	}
+
+	/**
+	 * How many slow washers the car wash has in total.
+	 * 
+	 * @return
+	 */
+	public int getTotalSlowWashers() {
+		return totalSlowWashers;
+	}
+
+	/**
+	 * True if there are any free washers, fast or slow.
+	 * 
+	 * @return
+	 */
+	public boolean hasAvailableWashers() {
+		return (availableFastWashers != 0 || availableSlowWashers != 0);
+	}
+
+	/**
+	 * TODO: Not sure what this is.
+	 * 
+	 * @return
+	 */
 	public double meanQueueingTime() {
 		return (totalCarsQueued == 0) ? 0 : totalQueueTime / totalCarsQueued;
 	}
 
+	/**
+	 * Sets the time distribution for car arrivals.
+	 * 
+	 * @param lambda
+	 * @param seed
+	 */
 	public void setCarArrivalDistribution(double lambda, long seed) {
 		this.lambda = lambda;
 		this.seed = seed;
 		eRS = new ExponentialRandomStream(lambda, seed);
 	}
 
+	/**
+	 * Marks this Observable object as having been changed; the hasChanged
+	 * method will now return true.
+	 */
 	@Override
 	public void setChanged() {
 		super.setChanged();
 	}
 
+	/**
+	 * Sets which car the current event concerns.
+	 * 
+	 * @param car
+	 */
 	public void setCurrentCar(Car car) {
 		currentCar = car;
 	}
 
+	/**
+	 * Sets which event is currently being processed.
+	 * 
+	 * @param currentEvent
+	 */
 	public void setCurrentEvent(Event currentEvent) {
 		previousEvent = this.currentEvent;
 		this.currentEvent = currentEvent;
 	}
 
+	/**
+	 * Sets the time distribution for fast washer job time.
+	 * 
+	 * @param low
+	 * @param high
+	 * @param seed
+	 */
 	public void setFastWasherDistribution(double low, double high, long seed) {
 		fastDist[0] = low;
 		fastDist[1] = high;
@@ -115,6 +252,22 @@ public class CarWashState extends SimState {
 		fastURS = new UniformRandomStream(low, high, seed);
 	}
 
+	/**
+	 * The maximum allowed length of the car queue.
+	 * 
+	 * @param maxCarQueueSize
+	 */
+	public void setMaxCarQueueSize(int maxCarQueueSize) {
+		this.maxCarQueueSize = maxCarQueueSize;
+	}
+
+	/**
+	 * Sets the time distribution for slow washer job time.
+	 * 
+	 * @param low
+	 * @param high
+	 * @param seed
+	 */
 	public void setSlowWasherDistribution(double low, double high, long seed) {
 		slowDist[0] = low;
 		slowDist[1] = high;
@@ -122,10 +275,18 @@ public class CarWashState extends SimState {
 		slowURS = new UniformRandomStream(low, high, seed);
 	}
 
+	/**
+	 * Sets the current time.
+	 * 
+	 * @param time
+	 */
 	public void setTime(double time) {
 		currentTime = time;
 	}
 
+	/**
+	 * Updates the total time the washers have spent idle.
+	 */
 	public void updateIdleTime() {
 		double currentEventTime = (currentEvent == null) ? 0
 				: currentEvent.startTime;
@@ -136,6 +297,9 @@ public class CarWashState extends SimState {
 				* (currentEventTime - previousEventTime);
 	}
 
+	/**
+	 * Updates the total time all cars have spent in the queue.
+	 */
 	public void updateQueueTime() {
 		double currentEventTime = (currentEvent == null) ? 0
 				: currentEvent.startTime;
@@ -144,10 +308,6 @@ public class CarWashState extends SimState {
 
 		totalQueueTime = totalQueueTime + carQueue.size()
 				* Math.abs(currentEventTime - previousEventTime);
-	}
-
-	public boolean washersAreAvailable() {
-		return (availableFastWashers != 0 || availableSlowWashers != 0);
 	}
 
 }
