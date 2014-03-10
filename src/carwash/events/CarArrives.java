@@ -36,6 +36,7 @@ public class CarArrives extends Event {
 		// A new car arrives
 		Car arrivedCar = state.makeCar();
 		state.setCurrentCar(arrivedCar);
+		state.totalCars++;
 
 		// Display the new state
 		state.setChanged();
@@ -73,9 +74,6 @@ public class CarArrives extends Event {
 			leaveEvent.startTime = timeFinished;
 			eventQueue.add(leaveEvent);
 
-		} else if (!state.carQueue.isEmpty()) {
-			// No washers available
-			state.totalCarsQueued++;
 		}
 
 		// Schedule a new arrival

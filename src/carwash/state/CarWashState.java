@@ -24,7 +24,7 @@ public class CarWashState extends SimState {
 	private double totalQueueTime;
 	private double totalIdleTime;
 	public int totalRejected;
-	public int totalCarsQueued;
+	public int totalCars;
 
 	private Car currentCar;
 	public FIFO carQueue = new FIFO();
@@ -213,7 +213,7 @@ public class CarWashState extends SimState {
 	 * @return
 	 */
 	public double meanQueueingTime() {
-		return (totalCarsQueued == 0) ? 0 : totalQueueTime / totalCarsQueued;
+		return (totalCars == 0) ? 0 : totalQueueTime / totalCars;
 	}
 
 	/**
