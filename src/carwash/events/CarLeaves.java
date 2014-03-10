@@ -47,9 +47,9 @@ public class CarLeaves extends Event {
 		// Otherwise, increase available washers.
 		if (state.carQueue.isEmpty()) {
 			if (fastWasher) {
-				state.availableFastWashers = state.availableFastWashers + 1;
+				state.availableFastWashers++;
 			} else {
-				state.availableSlowWashers = state.availableSlowWashers + 1;
+				state.availableSlowWashers++;
 			}
 
 		} else {

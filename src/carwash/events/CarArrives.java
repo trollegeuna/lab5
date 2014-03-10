@@ -34,7 +34,7 @@ public class CarArrives extends Event {
 		state.updateQueueTime();
 
 		// A new car arrives
-		Car arrivedCar = state.carFactory.makeCar();
+		Car arrivedCar = state.makeCar();
 		state.setCurrentCar(arrivedCar);
 
 		// Display the new state
@@ -43,7 +43,7 @@ public class CarArrives extends Event {
 
 		// Check if we can queue the new car or have to reject it
 		if (state.carQueueIsFull()) {
-			state.totalRejected = state.totalRejected + 1;
+			state.totalRejected++;
 		} else {
 			state.carQueue.add(arrivedCar);
 		}
@@ -54,9 +54,9 @@ public class CarArrives extends Event {
 			boolean fastWasher = false;
 			if (state.availableFastWashers != 0) {
 				fastWasher = true;
-				state.availableFastWashers = state.availableFastWashers - 1;
+				state.availableFastWashers--;
 			} else {
-				state.availableSlowWashers = state.availableSlowWashers - 1;
+				state.availableSlowWashers--;
 			}
 
 			double timeFinished = (fastWasher) ? state
@@ -75,7 +75,7 @@ public class CarArrives extends Event {
 
 		} else if (!state.carQueue.isEmpty()) {
 			// No washers available
-			state.totalCarsQueued = state.totalCarsQueued + 1;
+			state.totalCarsQueued++;
 		}
 
 		// Schedule a new arrival
