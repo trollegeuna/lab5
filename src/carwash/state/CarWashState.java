@@ -26,11 +26,11 @@ public class CarWashState extends SimState {
 	public int totalRejected;
 	public int totalCarsQueued;
 
-	public Car currentCar;
+	private Car currentCar;
 	public FIFO carQueue = new FIFO();
-	private int maxCarQueueSize = 5;
 
-	public CarFactory carFactory = new CarFactory();
+	private int maxCarQueueSize = 5;
+	private CarFactory carFactory = new CarFactory();
 
 	private Event previousEvent;
 	private Event currentEvent;
@@ -43,6 +43,15 @@ public class CarWashState extends SimState {
 		this.totalSlowWashers = totalSlowWashers;
 		availableFastWashers = totalFastWashers;
 		availableSlowWashers = totalSlowWashers;
+	}
+
+	/**
+	 * Makes a new car
+	 * 
+	 * @return
+	 */
+	public Car makeCar() {
+		return carFactory.makeCar();
 	}
 
 	/**
@@ -61,6 +70,15 @@ public class CarWashState extends SimState {
 	 */
 	public boolean carQueueIsFull() {
 		return (carQueue.size() >= maxCarQueueSize);
+	}
+
+	/**
+	 * The car associated with the current event.
+	 * 
+	 * @return
+	 */
+	public Car getCurrentCar() {
+		return currentCar;
 	}
 
 	/**
@@ -220,7 +238,7 @@ public class CarWashState extends SimState {
 	}
 
 	/**
-	 * Sets which car the current event concerns.
+	 * Sets which car is associaded with the current event.
 	 * 
 	 * @param car
 	 */

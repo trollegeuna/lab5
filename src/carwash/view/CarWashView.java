@@ -101,7 +101,7 @@ public class CarWashView extends SimView {
 			String reportLine = String.format(
 					"%.2f\t%s\t%s\t%s\t%s\t%.2f\t\t%.2f\t\t%s\t\t%s",
 					state.currentTime, state.availableFastWashers,
-					state.availableSlowWashers, state.currentCar.id,
+					state.availableSlowWashers, state.getCurrentCar().id,
 					state.getCurrentEvent().eventName,
 					state.getTotalIdleTime(), state.getTotalQueueTime(),
 					state.carQueue.size(), state.totalRejected);
