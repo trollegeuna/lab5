@@ -14,7 +14,6 @@ public class SimulationStops extends Event {
 
 	public SimulationStops(double stopTime, CarWashState state,
 			EventQueue eventQueue) {
-		super.eventName = "Stop";
 		super.startTime = stopTime;
 		this.state = state;
 		this.eventQueue = eventQueue;
@@ -34,6 +33,11 @@ public class SimulationStops extends Event {
 		state.notifyObservers();
 
 		eventQueue.clear();
+	}
+
+	@Override
+	public String toString() {
+		return "Stop";
 	}
 
 }

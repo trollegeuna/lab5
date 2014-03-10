@@ -4,7 +4,7 @@ package simulator;
  * An abstract event.
  */
 public abstract class Event implements Comparable<Event> {
-	public String eventName;
+
 	public double startTime;
 
 	/**
@@ -25,4 +25,10 @@ public abstract class Event implements Comparable<Event> {
 	 * Execute this event.
 	 */
 	public abstract void execute();
+
+	/**
+	 * Prints the name of the event.
+	 */
+	@Override
+	public abstract String toString();
 }

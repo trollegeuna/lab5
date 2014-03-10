@@ -17,7 +17,6 @@ public class CarLeaves extends Event {
 
 	public CarLeaves(double startTime, CarWashState state,
 			EventQueue eventQueue, Car car, boolean fastWasher) {
-		super.eventName = "Leave";
 		super.startTime = startTime;
 		this.state = state;
 		this.eventQueue = eventQueue;
@@ -65,6 +64,11 @@ public class CarLeaves extends Event {
 			eventQueue.add(leaveEvent);
 		}
 
+	}
+
+	@Override
+	public String toString() {
+		return "Leave";
 	}
 
 }

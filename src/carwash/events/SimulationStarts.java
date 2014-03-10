@@ -14,7 +14,6 @@ public class SimulationStarts extends Event {
 	EventQueue eventQueue;
 
 	public SimulationStarts(CarWashState state, EventQueue eventQueue) {
-		super.eventName = "Start";
 		this.state = state;
 		this.eventQueue = eventQueue;
 	}
@@ -36,6 +35,11 @@ public class SimulationStarts extends Event {
 		Event firstArrival = new CarArrives(state.getNextArrivalTime(), state,
 				eventQueue);
 		eventQueue.add(firstArrival);
+	}
+
+	@Override
+	public String toString() {
+		return "Start";
 	}
 
 }

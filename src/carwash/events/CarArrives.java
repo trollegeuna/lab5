@@ -15,7 +15,6 @@ public class CarArrives extends Event {
 
 	public CarArrives(double startTime, CarWashState state,
 			EventQueue eventQueue) {
-		super.eventName = "Arrive";
 		super.startTime = startTime;
 		this.state = state;
 		this.eventQueue = eventQueue;
@@ -71,7 +70,6 @@ public class CarArrives extends Event {
 			// Schedule leave event at the time the wash is finished.
 			CarLeaves leaveEvent = new CarLeaves(timeFinished, state,
 					eventQueue, carToWash, fastWasher);
-			leaveEvent.startTime = timeFinished;
 			eventQueue.add(leaveEvent);
 
 		}
@@ -80,6 +78,11 @@ public class CarArrives extends Event {
 		CarArrives arrivalEvent = new CarArrives(state.getNextArrivalTime(),
 				state, eventQueue);
 		eventQueue.add(arrivalEvent);
+	}
+
+	@Override
+	public String toString() {
+		return "Arrive";
 	}
 
 }
