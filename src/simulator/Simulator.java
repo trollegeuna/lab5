@@ -5,7 +5,7 @@ package simulator;
  */
 public class Simulator {
 
-	EventQueue eventQueue;
+	private EventQueue eventQueue;
 
 	public Simulator(EventQueue eventQueue) {
 		setEventQueue(eventQueue);
