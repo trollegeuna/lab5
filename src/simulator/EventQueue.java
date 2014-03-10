@@ -39,7 +39,11 @@ public class EventQueue {
 	 *             If the queue is empty.
 	 */
 	public Event first() throws NoSuchElementException {
-		return eventQueue.get(0);
+		if (eventQueue.isEmpty()) {
+			throw new NoSuchElementException();
+		} else {
+			return eventQueue.get(0);
+		}
 	}
 
 	/**
@@ -58,7 +62,11 @@ public class EventQueue {
 	 *             If the queue is empty.
 	 */
 	public void removeFirst() throws NoSuchElementException {
-		eventQueue.remove(0);
+		if (eventQueue.isEmpty()) {
+			throw new NoSuchElementException();
+		} else {
+			eventQueue.remove(0);
+		}
 	}
 
 	/**
